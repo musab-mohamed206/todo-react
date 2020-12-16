@@ -2,8 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from "react-router-dom";
 import ProjectTaskItem from './ProjectTask/ProjectTaskItem';
+import PropTypes from "prop-types";
+import { getBacklog } from "../actions/ProjectTaskAction";
 
-export class ProjectBoard extends Component {
+ class ProjectBoard extends Component {
+
+    componentDidMount() {
+        this.props.getBacklog();
+    }
+
     render() {
         return (
             <div className="container">
@@ -64,13 +71,15 @@ export class ProjectBoard extends Component {
         )
     }
 }
-
-const mapStateToProps = (state) => ({
-    
-})
-
-const mapDispatchToProps = {
-    
+ProjectBoard.protoType = {
+    getBacklog:PropTypes.func.isRequired,
+    project_tasks: PropTypes.object.isRequired
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectBoard)
+const mapStateToProps = state => ({
+    project_tasks: state.project_task
+});
+
+
+
+export default connect(mapStateToProps, {getBacklog})(ProjectBoard);

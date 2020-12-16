@@ -53,7 +53,7 @@ import classnames from "classnames";
                                     <input 
                                         type="text"
                                         className="form-control form-control-lg" required name="summary" value={this.state.summary} onChange={this.onChange} placeholder="Project Task summary" />
-                                        <p>{errors.summary}</p>
+                                        
                                 </div>
                                 <div className="form-group">
                                     <textarea className="form-control form-control-lg" placeholder="Acceptance Criteria" name="acceptanceCriteria" value={this.state.acceptanceCriteria} onChange={this.onChange}></textarea>
