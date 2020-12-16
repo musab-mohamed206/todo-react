@@ -17,6 +17,12 @@ import classnames from "classnames";
          this.onSubmit = this.onSubmit.bind(this);
      }
 
+     componentWillReceiveProps(nextProps) {
+         if (nextProps.errors) {
+             this.setState({errors: nextProps.errors});
+         }
+     }
+
      onChange(e) {
          this.setState({[e.target.name]:e.target.value})
      }
@@ -32,6 +38,7 @@ import classnames from "classnames";
          this.props.addProjectTask(newProjectTask, this.props.history);
      }
     render() {
+        const {errors} = this.state;
         return (
             <div className="addProjectTask">
                 <div className="container">
@@ -45,7 +52,8 @@ import classnames from "classnames";
                                 <div className="form-group">
                                     <input 
                                         type="text"
-                                        className="form-control form-control-lg" name="summary" value={this.state.summary} onChange={this.onChange} placeholder="Project Task summary" />
+                                        className="form-control form-control-lg" required name="summary" value={this.state.summary} onChange={this.onChange} placeholder="Project Task summary" />
+                                        <p>{errors.summary}</p>
                                 </div>
                                 <div className="form-group">
                                     <textarea className="form-control form-control-lg" placeholder="Acceptance Criteria" name="acceptanceCriteria" value={this.state.acceptanceCriteria} onChange={this.onChange}></textarea>
