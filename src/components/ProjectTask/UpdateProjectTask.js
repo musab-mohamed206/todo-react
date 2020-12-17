@@ -1,6 +1,16 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { connect } from "react-redux";
+import classnames from "classnames";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { getProjectTask } from "../../actions/ProjectTaskAction";
 
  class UpdateProjectTask extends Component {
+
+    componentDidMount() {
+        const {pt_id} = this.props.match.params;
+        this.props.getProjectTask(pt_id);
+    }
     render() {
         return (
             <div className="addProjectTask">
@@ -36,4 +46,15 @@ import React, { Component } from 'react'
     }
 }
 
-export default UpdateProjectTask;
+UpdateProjectTask.propTypes = {
+    getProjectTask: PropTypes.func.isRequired,
+    erroes: PropTypes.object.isRequired,
+    project_task: PropTypes.object.isRequired
+}
+
+const mapStateToProps = state =>({
+    project_task: state.project_task,
+    erroes: state.erroes
+});
+
+export default connect(mapStateToProps , {getProjectTask})(UpdateProjectTask);
