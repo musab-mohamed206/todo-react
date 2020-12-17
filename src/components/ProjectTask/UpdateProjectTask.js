@@ -3,13 +3,58 @@ import { connect } from "react-redux";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { getProjectTask } from "../../actions/ProjectTaskAction";
+import { getProjectTask, addProjectTask } from "../../actions/ProjectTaskAction";
 
  class UpdateProjectTask extends Component {
+
+    constructor() {
+        super();
+        this.state = {
+            id: "",
+            summary: "",
+            acceptanceCriteria: "",
+            status: "",
+            erroes: {}
+        };
+        this.onChange = this.onChange.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const {
+            id,
+            summary,
+            acceptanceCriteria,
+            status
+        } = nextProps.project_task;
+
+        this.setState({
+            id,
+            summary,
+            acceptanceCriteria,
+            status
+        });
+    }
 
     componentDidMount() {
         const {pt_id} = this.props.match.params;
         this.props.getProjectTask(pt_id);
+    }
+
+    onSubmit(e) {
+        e.preventDefault()
+        const updatedTask = {
+            id: this.state.id,
+            summary: this.state.summary,
+            acceptanceCriteria: this.state.acceptanceCriteria,
+            status: this.state.status
+        };
+
+        this.props.addProjectTask(updatedTask, this.props.history);
+    }
+
+    onChange(e) {
+        this.setState({[e.target.name]:e.target.value})
     }
     render() {
         return (
@@ -21,15 +66,15 @@ import { getProjectTask } from "../../actions/ProjectTaskAction";
                                 Back to Board
                             </a>
                             <h4 className="display-4 text-center">Add /Update Project Task</h4>
-                            <form>
+                            <form onSubmit={this.onSubmit}>
                                 <div className="form-group">
-                                    <input type="text" className="form-control form-control-lg" name="summary" placeholder="Project Task summary" />
+                                    <input type="text" className="form-control form-control-lg" name="summary" value={this.state.summary} onChange={this.onChange} placeholder="Project Task summary" />
                                 </div>
                                 <div className="form-group">
-                                    <textarea className="form-control form-control-lg" placeholder="Acceptance Criteria" name="acceptanceCriteria"></textarea>
+                                    <textarea className="form-control form-control-lg" placeholder="Acceptance Criteria" name="acceptanceCriteria" value={this.state.acceptanceCriteria} onChange={this.onChange}></textarea>
                                 </div>
                                 <div className="form-group">
-                                    <select className="form-control form-control-lg" name="status">
+                                    <select className="form-control form-control-lg" name="status" value={this.state.status} onChange={this.onChange}>
                                         <option value="">Select Status</option>
                                         <option value="TO_DO">TO DO</option>
                                         <option value="IN_PROGRESS">IN PROGRESS</option>
@@ -48,13 +93,14 @@ import { getProjectTask } from "../../actions/ProjectTaskAction";
 
 UpdateProjectTask.propTypes = {
     getProjectTask: PropTypes.func.isRequired,
+    addProjectTask: PropTypes.func.isRequired,
     erroes: PropTypes.object.isRequired,
     project_task: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state =>({
-    project_task: state.project_task,
+    project_task: state.project_task.project_task,
     erroes: state.erroes
 });
 
-export default connect(mapStateToProps , {getProjectTask})(UpdateProjectTask);
+export default connect(mapStateToProps , {getProjectTask, addProjectTask})(UpdateProjectTask);
